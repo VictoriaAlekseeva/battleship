@@ -5,15 +5,24 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "start": "node ./index.js",
-        "start:dev": "nodemon ./index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "node ./index.ts",
+        "start:dev": "nodemon ./index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint:fix": "eslint . --fix",
+        "lint": "eslint ."
     },
     "author": "Andrei Auchynnikau",
     "keywords": [],
     "license": "ISC",
     "devDependencies": {
-        "nodemon": "^2.0.16"
+        "@tsconfig/node-lts": "^20.1.1",
+        "@types/node": "^20.11.19",
+        "@typescript-eslint/eslint-plugin": "^7.0.1",
+        "@typescript-eslint/parser": "^7.0.1",
+        "eslint": "^8.56.0",
+        "nodemon": "^2.0.16",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.3"
     },
     "dependencies": {
         "ws": "^8.8.0"
