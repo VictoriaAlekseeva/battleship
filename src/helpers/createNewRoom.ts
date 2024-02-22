@@ -17,4 +17,5 @@ export const createNewRoom = (currentUser: Player) => {
     }
     rooms.push(newRoom)
   }
+  console.log(rooms)
 }

@@ -1,4 +1,4 @@
-import { RoomUsers, players } from "../data/gameData";
+import { RoomUsers, players, rooms } from "../data/gameData";
 import { dataStringify } from "./parser";
 
 export const createGame = (roomUsers: RoomUsers[]) => {

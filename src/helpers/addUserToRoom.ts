@@ -7,5 +7,7 @@ export const addUserToRoom = (currentUser: Player, roomId: number) => {
   if (name && !rooms[roomIndex].roomUsers.find(user => user.name === name)) {
     rooms[roomIndex].roomUsers.push({name, index: 2})
     createGame(rooms[roomIndex].roomUsers);
+    rooms.splice(roomIndex, 1)
   }
+  console.log(rooms)
 }
