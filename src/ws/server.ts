@@ -40,7 +40,7 @@ export const startServer = () => {
             break;
           case "add_user_to_room":
             const indexRoom = parsedData.indexRoom
-            currentUser && addUserToRoom(currentUser, indexRoom)
+            currentUser && addUserToRoom(currentUser, indexRoom);
             wss.clients.forEach((client) => {
               client.send(updateRoom());
             });
