@@ -7,11 +7,11 @@ export interface Player {
   password?: string,
   index?: number,
   ws?: WebSocket,
-  ship?: Ship[],
+  // ship?: Ship[],
   wins?: number
 }
 
-export const players: Map <string, Player> = new Map();
+export const players: Map<string, Player> = new Map();
 
 //Player room data (players, game board, ships positions) storages in the server
 export const rooms: Room[] = [];
@@ -26,7 +26,10 @@ export interface RoomUsers {
   index: number;
 }
 
-const game = {};
+interface GameInfo {
+  indexPlayer: number;
+  ships: Ship[],
+}
 
 export interface Ship {
   position: {
@@ -38,3 +41,4 @@ export interface Ship {
   type: "small" | "medium" | "large" | "huge";
 }
 
+export const game: Record<number, GameInfo[]> = {}; //number -> gameId, GameInfo array of 2 items with info about player and its ships

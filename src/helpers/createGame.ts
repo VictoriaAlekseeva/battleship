@@ -1,4 +1,4 @@
-import { RoomUsers, players, rooms } from "../data/gameData";
+import { RoomUsers, game, players } from "../data/gameData";
 import { dataStringify } from "./parser";
 
 export const createGame = (roomUsers: RoomUsers[]) => {
@@ -7,14 +7,18 @@ export const createGame = (roomUsers: RoomUsers[]) => {
   const player1 = players.get(roomUsers[0].name)
   const player2 = players.get(roomUsers[1].name)
 
-  const data = {
+  const response1 = dataStringify("create_game", {
+    idGame: gameId,
+    idPlayer: player1!.index
+  });
+  const response2 = dataStringify("create_game", {
     idGame: gameId,
     idPlayer: player2!.index
-  }
+  });
 
-  const response = dataStringify("create_game", data);
+  game[gameId] = [];
 
-  player1?.ws?.send(response);
-  player2?.ws?.send(response);
+  player1?.ws?.send(response1);
+  player2?.ws?.send(response2);
 
 }

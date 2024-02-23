@@ -3,8 +3,9 @@ import { dataParse, dataStringify } from '../helpers/parser';
 import { Player, players, rooms } from '../data/gameData'
 import { createPlayer } from '../helpers/createUser';
 import { createNewRoom } from '../helpers/createNewRoom';
-import {updateRoom} from '../helpers/updateRoom'
+import { updateRoom } from '../helpers/updateRoom'
 import { addUserToRoom } from '../helpers/addUserToRoom';
+import { addShips } from '../helpers/addShips';
 
 export const startServer = () => {
 
@@ -25,7 +26,7 @@ export const startServer = () => {
 
         switch (type) {
           case "reg":
-            const {name, password} = parsedData
+            const { name, password } = parsedData
             currentUser = createPlayer(name, password, ws);
             ws.send(dataStringify('reg', currentUser));
             ws.send(updateRoom());
@@ -47,6 +48,7 @@ export const startServer = () => {
             console.log(`add_user_to_room user data ${data}`)
             break;
           case "add_ships":
+            currentUser && addShips(parsedData, currentUser)
             console.log(`add_ships user data ${data}`)
             break;
           case "attack":
