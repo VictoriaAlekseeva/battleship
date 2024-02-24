@@ -3,15 +3,19 @@ import WebSocket from 'ws';
 // We should have inmemory DB with player data (login and password) storage
 
 export interface Player {
-  name?: string,
-  password?: string,
-  index?: number,
-  ws?: WebSocket,
-  // ship?: Ship[],
+  name: string,
+  password: string,
+  index: number,
+  ws: WebSocket,
+  room?: number | null,
+  gameId?: number | null
+  ships?: Ships[],
   wins?: number
 }
 
 export const players: Map<string, Player> = new Map();
+
+export const playersID: Record<number, string> = {}; // list players name -> id
 
 //Player room data (players, game board, ships positions) storages in the server
 export const rooms: Room[] = [];
@@ -28,10 +32,10 @@ export interface RoomUsers {
 
 interface GameInfo {
   indexPlayer: number;
-  ships: Ship[],
+  // ships: Ship[],
 }
 
-export interface Ship {
+export interface Ships {
   position: {
     x: number;
     y: number;
@@ -41,4 +45,6 @@ export interface Ship {
   type: "small" | "medium" | "large" | "huge";
 }
 
-export const game: Record<number, GameInfo[]> = {}; //number -> gameId, GameInfo array of 2 items with info about player and its ships
+export const game: Record<number, GameInfo[]> = {}; //number -> gameId, GameInfo array of 2 items with info about players
+
+// game = {gameId:[{indexPlayer: number}], currentPlayer: index}}

@@ -1,6 +1,7 @@
 import { Player, rooms, Room } from '../data/gameData';
 
-export const createNewRoom = (currentUser: Player) => {
+export const createRoom = (currentUser: Player) => {
+  if (currentUser.room !== null) return;
   const newRoomId = Math.round(Math.random() * 1000);
 
   const {name, index} = currentUser
@@ -15,6 +16,8 @@ export const createNewRoom = (currentUser: Player) => {
         }
       ]
     }
+    currentUser.room = newRoomId;
+
     rooms.push(newRoom)
   }
   console.log(rooms)

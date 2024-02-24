@@ -1,7 +1,12 @@
 import WebSocket from 'ws';
-import { players } from '../data/gameData';
+import { Player, players, playersID } from '../data/gameData';
 
-export const createPlayer = (name: string, password: string, ws: WebSocket) => {
+interface RegError {
+  error: boolean,
+  errorText: string
+}
+
+export const createPlayer = (name: string, password: string, ws: WebSocket): Pick<Player, 'name'| 'index' > & RegError => {
 
   if (players.has(name)) {
     const player = players.get(name);
@@ -10,7 +15,7 @@ export const createPlayer = (name: string, password: string, ws: WebSocket) => {
       players.set(name, {...player, ws} )
       return { name, index: player.index, error: false, errorText: "" }
     } else {
-      return { error: true, errorText: "Incorrect password" } }
+      return { name, index: player!.index, error: true, errorText: "Incorrect password" } }
   } else {
     const playerIndex = players.size + 1;
     const newPlayer = {
@@ -18,10 +23,13 @@ export const createPlayer = (name: string, password: string, ws: WebSocket) => {
       password,
       index: playerIndex,
       id: 0,
+      room: null,
+      gameId: null,
       ws
     }
 
-    players.set(name, newPlayer)
+    players.set(name, newPlayer);
+    playersID[playerIndex] = name;
     return { name, index: newPlayer.index, error: false, errorText: "" };
   }
 }

@@ -1,30 +1,29 @@
-import { game, Player, players } from '../data/gameData';
+import { game, Player, players, playersID, Ships } from '../data/gameData';
 import { dataStringify } from './parser';
 
-export const addShips = (parsedData: any, currentUser: Player) => {
+export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlayer: number }, currentUser: Player) => {
 
   const { gameId, ships, indexPlayer } = parsedData;
 
-  game[gameId].push({ indexPlayer, ships });
+  currentUser.ships = ships;
 
-  console.log('game began', game);
+  game[gameId].push({ indexPlayer });
+
+  console.log('game began', game, currentUser);
 
   if (game[gameId].length === 2) {
 
     game[gameId].forEach(gameItem => {
 
-      const responce = dataStringify("start_game", {
-        ships: gameItem.ships,
+      const response = dataStringify("start_game", {
+        ships: currentUser.ships,
         currentPlayerIndex: gameItem.indexPlayer
       });
 
-      for (let user of players.values()) {
-        if (user.index === gameItem.indexPlayer) {
-          user.ws?.send(responce)
-        }
-      }
-    })
+      const player = players.get(playersID[gameItem.indexPlayer]);
+      player?.ws.send(response)
 
+    })
   }
 
 }

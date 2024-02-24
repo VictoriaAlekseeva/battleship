@@ -2,7 +2,7 @@ import WebSocket, { MessageEvent, WebSocketServer } from 'ws';
 import { dataParse, dataStringify } from '../helpers/parser';
 import { Player, players, rooms } from '../data/gameData'
 import { createPlayer } from '../helpers/createUser';
-import { createNewRoom } from '../helpers/createNewRoom';
+import { createRoom } from '../helpers/createNewRoom';
 import { updateRoom } from '../helpers/updateRoom'
 import { addUserToRoom } from '../helpers/addUserToRoom';
 import { addShips } from '../helpers/addShips';
@@ -15,7 +15,7 @@ export const startServer = () => {
   wss.on('connection', (ws: WebSocket) => {
     console.log('New client connected');
 
-    let currentUser: Player | undefined;
+    let currentUser = {} as Player;
 
     ws.on('message', (message: MessageEvent) => {
       try {
@@ -26,14 +26,15 @@ export const startServer = () => {
 
         switch (type) {
           case "reg":
-            const { name, password } = parsedData
-            currentUser = createPlayer(name, password, ws);
-            ws.send(dataStringify('reg', currentUser));
+            const { name, password } = parsedData;
+            const regUser = createPlayer(name, password, ws)
+            currentUser = players.get(regUser.name)!;
+            ws.send(dataStringify('reg', regUser));
             ws.send(updateRoom());
             console.log(players);
             break;
           case "create_room":
-            currentUser && createNewRoom(currentUser);
+            createRoom(currentUser);
             console.log(`create_room user data ${parsedData}, type ${type}`)
             wss.clients.forEach((client) => {
               client.send(updateRoom());
@@ -41,14 +42,14 @@ export const startServer = () => {
             break;
           case "add_user_to_room":
             const indexRoom = parsedData.indexRoom
-            currentUser && addUserToRoom(currentUser, indexRoom);
+            addUserToRoom(currentUser, indexRoom);
             wss.clients.forEach((client) => {
               client.send(updateRoom());
             });
             console.log(`add_user_to_room user data ${data}`)
             break;
           case "add_ships":
-            currentUser && addShips(parsedData, currentUser)
+            addShips(parsedData, currentUser)
             console.log(`add_ships user data ${data}`)
             break;
           case "attack":
