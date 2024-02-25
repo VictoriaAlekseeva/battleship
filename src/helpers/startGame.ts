@@ -3,7 +3,8 @@ import { dataStringify } from "./parser";
 import { turn } from "./turn";
 
 export const startGame = (gameId: number) => {
-  const playerTurn = turn(gameId)
+  const playerTurn = turn(gameId, false)
+
   if (game[gameId].players.length === 2) {
 
     game[gameId].players.forEach(gameItem => {
@@ -18,7 +19,4 @@ export const startGame = (gameId: number) => {
       player?.ws.send(playerTurn)
       console.log(game)
     })
-
-
-
 }}

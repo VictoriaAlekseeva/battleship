@@ -43,6 +43,8 @@ export interface Ships {
   direction: boolean;
   length: number;
   type: "small" | "medium" | "large" | "huge";
+  shots?: number;
+  status?: "killed"|"shot"
 }
 
 export const game: Record<number, GameInfo> = {}; //number -> gameId, GameInfo array of 2 items with info about players
