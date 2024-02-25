@@ -1,5 +1,6 @@
 import { game, Player, players, playersID, Ships } from '../data/gameData';
 import { dataStringify } from './parser';
+import { startGame } from './startGame';
 
 export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlayer: number }, currentUser: Player) => {
 
@@ -7,23 +8,29 @@ export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlay
 
   currentUser.ships = ships;
 
-  game[gameId].push({ indexPlayer });
+  game[gameId].players.push(indexPlayer);
+
+  // const turnResponse = dataStringify("turn", {
+  //       currentPlayer: game[gameId].players[game[gameId].currentPlayer]
+  //     })
 
   console.log('game began', game, currentUser);
+  startGame(gameId)
 
-  if (game[gameId].length === 2) {
+  // if (game[gameId].players.length === 2) {
 
-    game[gameId].forEach(gameItem => {
+  //   game[gameId].players.forEach(gameItem => {
 
-      const response = dataStringify("start_game", {
-        ships: currentUser.ships,
-        currentPlayerIndex: gameItem.indexPlayer
-      });
+  //     const response = dataStringify("start_game", {
+  //       ships: currentUser.ships,
+  //       currentPlayerIndex: gameItem
+  //     });
 
-      const player = players.get(playersID[gameItem.indexPlayer]);
-      player?.ws.send(response)
-
-    })
-  }
+  //     const player = players.get(playersID[gameItem]);
+  //     player?.ws.send(response)
+  //     player?.ws.send(turnResponse)
+  //     console.log(game)
+  //   })
+  // }
 
 }

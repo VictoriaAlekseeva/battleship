@@ -30,9 +30,9 @@ export interface RoomUsers {
   index: number;
 }
 
-interface GameInfo {
-  indexPlayer: number;
-  // ships: Ship[],
+export interface GameInfo {
+  players: number[];
+  currentPlayer: number; // index of current player in players array
 }
 
 export interface Ships {
@@ -45,6 +45,6 @@ export interface Ships {
   type: "small" | "medium" | "large" | "huge";
 }
 
-export const game: Record<number, GameInfo[]> = {}; //number -> gameId, GameInfo array of 2 items with info about players
+export const game: Record<number, GameInfo> = {}; //number -> gameId, GameInfo array of 2 items with info about players
 
 // game = {gameId:[{indexPlayer: number}], currentPlayer: index}}

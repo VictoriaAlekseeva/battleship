@@ -12,7 +12,7 @@ export const createPlayer = (name: string, password: string, ws: WebSocket): Pic
     const player = players.get(name);
     if (player && player.password === password) {
       console.log(name, password)
-      players.set(name, {...player, ws} )
+      players.set(name, {...player, ws, room: null} )
       return { name, index: player.index, error: false, errorText: "" }
     } else {
       return { name, index: player!.index, error: true, errorText: "Incorrect password" } }

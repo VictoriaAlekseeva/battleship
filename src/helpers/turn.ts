@@ -1,14 +1,24 @@
+import { game } from "../data/gameData"
 import { dataStringify } from "./parser"
 
-export const game = () => {
-  let turnIndex = 0;
+export const turn = (gameId: number) => {
+  console.log(gameId)
+
+  game[gameId].currentPlayer = (game[gameId].currentPlayer + 1) % game[gameId].players.length
+
+  const response = dataStringify('turn', {currentPlayer: game[gameId].currentPlayer})
+
+  return response;
+
   // user.ws?.send(dataStringify('turn', {currentPlayer: game[gameId][playerTurn].indexPlayer}))
 
-  return () => {
-    turnIndex = (turnIndex + 1) % 2;
-    return turnIndex;
-  }
-
-  // return dataStringify('turn', {currentPlayer})
+//   {
+//     type: "turn",
+//     data:
+//         {
+//             currentPlayer: <number>, /* id of the player in the current game session */
+//         },
+//     id: 0,
+// }
 
 }
