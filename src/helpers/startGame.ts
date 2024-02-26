@@ -7,10 +7,10 @@ export const startGame = (gameId: number) => {
 
   if (game[gameId].players.length === 2) {
 
-    game[gameId].players.forEach(gameItem => {
+    game[gameId].players.forEach((gameItem, index) => {
 
       const response = dataStringify("start_game", {
-        ships: players.get(playersID[gameItem])!.ships,
+        ships: game[gameId].ships[index],
         currentPlayerIndex: gameItem
       });
 

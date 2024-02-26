@@ -9,7 +9,7 @@ export interface Player {
   ws: WebSocket,
   room?: number | null,
   gameId?: number | null
-  ships?: Ships[],
+  // ships?: Ships[],
   wins?: number
 }
 
@@ -32,6 +32,7 @@ export interface RoomUsers {
 
 export interface GameInfo {
   players: number[];
+  ships: Ships[][]
   currentPlayer: number; // index of current player in players array
 }
 
@@ -43,7 +44,11 @@ export interface Ships {
   direction: boolean;
   length: number;
   type: "small" | "medium" | "large" | "huge";
-  shots?: number;
+  // shotsCounter?: number;
+  shotsCoordinates?: {
+    x: number;
+    y: number;
+  }[];
   status?: "killed"|"shot"
 }
 

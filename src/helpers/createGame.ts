@@ -1,4 +1,4 @@
-import { GameInfo, RoomUsers, game, players } from "../data/gameData";
+import { RoomUsers, game, players } from "../data/gameData";
 import { dataStringify } from "./parser";
 
 export const createGame = (roomUsers: RoomUsers[]) => {
@@ -18,6 +18,7 @@ export const createGame = (roomUsers: RoomUsers[]) => {
 
   game[gameId] = {
     players: [],
+    ships: [],
     currentPlayer: 0
   };
 

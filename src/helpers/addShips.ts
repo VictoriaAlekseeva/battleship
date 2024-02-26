@@ -6,7 +6,9 @@ export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlay
 
   const { gameId, ships, indexPlayer } = parsedData;
 
-  currentUser.ships = ships;
+  // currentUser.ships = ships;
+
+  game[gameId].ships.push(ships);
 
   game[gameId].players.push(indexPlayer);
 
@@ -15,7 +17,7 @@ export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlay
   //     })
 
   console.log('game began', game, currentUser);
-  startGame(gameId)
+  startGame(gameId);
 
   // if (game[gameId].players.length === 2) {
 

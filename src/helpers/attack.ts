@@ -2,17 +2,10 @@ import { Player, Ships, game, players, playersID } from "../data/gameData";
 import { dataParse, dataStringify } from "./parser";
 import { turn } from "./turn";
 
-export const attack = (parsedData: { gameId: number, indexPlayer: number, x: number, y: number }, currentUser: Player) => {
+export const attack = (parsedData: { gameId: number, indexPlayer: number, x: number, y: number }) => {
 
   const { gameId, indexPlayer, x, y } = parsedData;
   const playerTurn = game[gameId].players[game[gameId].currentPlayer];
-
-  if (playerTurn !== indexPlayer) {
-    console.log('Not your turn!');
-    return
-  }
-
-  const playerShips = players.get(playersID[playerTurn])!.ships as Ships[];
 
   const attackResult = {
     position: { x, y },
@@ -20,7 +13,14 @@ export const attack = (parsedData: { gameId: number, indexPlayer: number, x: num
     status: "miss"
   }
 
-  playerShips.forEach(ship => {
+  if (playerTurn !== indexPlayer) {
+    console.log('Not your turn!');
+    return
+  }
+
+  const playerShips = game[gameId].ships[(game[gameId].currentPlayer + 1) % game[gameId].ships.length]
+
+  const ship = playerShips.find(ship => {
     const shipLength = ship.length;
 
     const positionX = ship.position.x;
@@ -29,47 +29,80 @@ export const attack = (parsedData: { gameId: number, indexPlayer: number, x: num
     const positionXEnd = ship.direction ? positionX : positionX + shipLength - 1;
     const positionYEnd = ship.direction ? positionY + shipLength - 1 : positionY;
 
-    if ((positionX <= x && x <= positionXEnd) && (positionY <= y && y <= positionYEnd)) {
-      ship.shots ? ship.shots++ : 1;
-      if (ship.shots === shipLength) {
-        ship.status = "killed";
-        attackResult.status = ship.status;
-      } else {
-        ship.status = "shot";
-        attackResult.status = ship.status;
-      }
-    }
+    return (positionX <= x && x <= positionXEnd) && (positionY <= y && y <= positionYEnd)
   })
 
-  let turnResponse = '';
+  if (!ship) {
+    const turnResponse = turn(gameId, true);
+    game[gameId].players.forEach(user => {
+      const gamePlayer = players.get(playersID[user]);
 
-  switch (attackResult.status) {
-    case "killed":
-      turnResponse = turn(gameId, false);
-      break
-    case "shot":
-      turnResponse = turn(gameId, false);
-      break
-    case "missed":
-      turnResponse = turn(gameId, true);
-      break
+      const res = dataStringify("attack", attackResult);
+
+      gamePlayer?.ws.send(res);
+      gamePlayer?.ws.send(turnResponse);
+    })
+    return;
   }
 
-  const attackResponse = dataStringify('attack', attackResult)
+  if (!ship.shotsCoordinates) ship.shotsCoordinates = [];
 
+  const wasShot = ship.shotsCoordinates.find(item => item.x === x && item.y === y);
 
-  sendResponse(game[gameId].players, attackResponse, turnResponse)
+  if (!wasShot) {
+    ship.shotsCoordinates.push({ x, y });
+    ship.status = "shot";
+  }
 
-}
+  if (ship.shotsCoordinates.length === ship.length) ship.status = "killed";
 
-const sendResponse = (users: number[], ...arg: string[]) => {
+  if (ship.status === "shot") {
+    const turnResponse = turn(gameId, false);
+    game[gameId].players.forEach(user => {
+      const gamePlayer = players.get(playersID[user]);
 
-  users.forEach(user => {
-    const currentUser = players.get(playersID[user]);
+      attackResult.status = "shot";
 
-    for (const res of arg) {
-      currentUser?.ws.send(res)
+      const res = dataStringify("attack", attackResult);
 
-    }
-  })
+      gamePlayer?.ws.send(res);
+      gamePlayer?.ws.send(turnResponse)
+    })
+  } else if (ship.status === "killed") {
+    const turnResponse = turn(gameId, false);
+
+    ship.shotsCoordinates.forEach(coordinate => {
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          const missedFieldsX = coordinate.x + i;
+          const missedFieldsY = coordinate.y + j;
+
+          if (missedFieldsX >= 0 && missedFieldsX <= 9) attackResult.position.x = missedFieldsX
+          if (missedFieldsY >= 0 && missedFieldsY <= 9) attackResult.position.y = missedFieldsY
+          attackResult.status="miss";
+          game[gameId].players.forEach(user => {
+            const gamePlayer = players.get(playersID[user]);
+
+            const res = dataStringify("attack", attackResult);
+
+            gamePlayer?.ws.send(res);
+          })
+        }
+      }
+    })
+
+    ship.shotsCoordinates.forEach(coordinate => {
+      attackResult.position = coordinate;
+      attackResult.status = "killed";
+
+      game[gameId].players.forEach(user => {
+        const gamePlayer = players.get(playersID[user]);
+
+        const res = dataStringify("attack", attackResult);
+
+        gamePlayer?.ws.send(res);
+        gamePlayer?.ws.send(turnResponse);
+      })
+    })
+  }
 }

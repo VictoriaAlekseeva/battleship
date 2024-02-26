@@ -54,7 +54,7 @@ export const startServer = () => {
             console.log(`add_ships user data ${data}`)
             break;
           case "attack":
-            attack(parsedData, currentUser)
+            attack(parsedData)
             console.log(`attack user data ${data}`)
             break;
           case "randomAttack":
