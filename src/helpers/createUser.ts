@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 import { Player, players, playersID } from '../data/gameData';
+import { consoleMessageColor } from '../data/consoleview';
 
 interface RegError {
   error: boolean,
@@ -11,8 +12,8 @@ export const createPlayer = (name: string, password: string, ws: WebSocket): Pic
   if (players.has(name)) {
     const player = players.get(name);
     if (player && player.password === password) {
-      console.log(name, password)
-      players.set(name, {...player, ws, room: null} )
+      players.set(name, {...player, ws, room: null} );
+      console.log(consoleMessageColor.result, `Player ${name} logged in`);
       return { name, index: player.index, error: false, errorText: "" }
     } else {
       return { name, index: player!.index, error: true, errorText: "Incorrect password" } }
@@ -30,6 +31,7 @@ export const createPlayer = (name: string, password: string, ws: WebSocket): Pic
 
     players.set(name, newPlayer);
     playersID[playerIndex] = name;
+    console.log(consoleMessageColor.result, `New player ${name} registered`);
     return { name, index: newPlayer.index, error: false, errorText: "" };
   }
 }

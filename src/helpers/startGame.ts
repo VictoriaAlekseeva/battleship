@@ -1,4 +1,5 @@
 import { game, players, playersID } from "../data/gameData";
+import { consoleMessageColor } from '../data/consoleview';
 import { dataStringify } from "./parser";
 import { turn } from "./turn";
 
@@ -15,8 +16,9 @@ export const startGame = (gameId: number) => {
       });
 
       const player = players.get(playersID[gameItem]);
-      player?.ws.send(response)
-      player?.ws.send(playerTurn)
-      console.log(game)
+      player?.ws.send(response);
+      player?.ws.send(playerTurn);
     })
-}}
+    console.log(consoleMessageColor.result, `Both palyers added ships, game ${gameId} started`);
+  }
+}

@@ -1,4 +1,5 @@
 import { game, players, playersID } from "../data/gameData";
+import { consoleMessageColor } from '../data/consoleview';
 import { finishGame } from "./finishGame";
 import { dataStringify } from "./parser";
 import { turn } from "./turn";
@@ -15,7 +16,7 @@ export const attack = (parsedData: { gameId: number | string, indexPlayer: numbe
   }
 
   if (playerTurn !== indexPlayer) {
-    console.log('Not your turn!');
+    console.log(consoleMessageColor.warning, `Not your turn, ${playersID[+indexPlayer]}!`);
     return
   }
 
@@ -43,6 +44,7 @@ export const attack = (parsedData: { gameId: number | string, indexPlayer: numbe
       gamePlayer?.ws.send(res);
       gamePlayer?.ws.send(turnResponse);
     })
+    console.log(consoleMessageColor.result, `You ${attackResult.status}`);
     return;
   }
 
@@ -75,6 +77,7 @@ export const attack = (parsedData: { gameId: number | string, indexPlayer: numbe
       gamePlayer?.ws.send(res);
       gamePlayer?.ws.send(turnResponse)
     })
+    console.log(consoleMessageColor.result, `The ship ${attackResult.status}`)
   } else if (ship.status === "killed") {
     const turnResponse = turn(gameId, false);
 
@@ -111,6 +114,8 @@ export const attack = (parsedData: { gameId: number | string, indexPlayer: numbe
         gamePlayer?.ws.send(turnResponse);
       })
     })
+
+    console.log(consoleMessageColor.result, `The ship ${attackResult.status}`)
 
     finishGame(gameId);
   }

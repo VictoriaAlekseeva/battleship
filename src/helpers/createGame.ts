@@ -1,5 +1,6 @@
 import { RoomUsers, game, players } from "../data/gameData";
 import { dataStringify } from "./parser";
+import { consoleMessageColor } from '../data/consoleview';
 
 export const createGame = (roomUsers: RoomUsers[]) => {
   const gameId = Math.floor(Math.random() * 1000);
@@ -24,4 +25,6 @@ export const createGame = (roomUsers: RoomUsers[]) => {
 
   player1?.ws?.send(response1);
   player2?.ws?.send(response2);
+
+  console.log(consoleMessageColor.result, `New game ${gameId} created`)
 }

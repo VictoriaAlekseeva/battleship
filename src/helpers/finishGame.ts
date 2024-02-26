@@ -1,3 +1,4 @@
+import { consoleMessageColor } from "../data/consoleview";
 import { game, players, playersID, winners } from "../data/gameData";
 import { dataStringify } from "./parser";
 
@@ -7,7 +8,7 @@ export const finishGame = (gameId: number | string) => {
 
       const winner= game[gameId].players[game[gameId].currentPlayer];
       const data = { winPlayer: winner };
-       const winnerName = playersID[winner]
+      const winnerName = playersID[winner];
 
       winners[winnerName] = winners[winnerName] ? ++winners[winnerName] : 1;
 
@@ -19,7 +20,6 @@ export const finishGame = (gameId: number | string) => {
 
       const winnersResponse = dataStringify("update_winners", winnersResponseData)
 
-
       game[gameId].players.forEach((gameItem) => {
 
         const response = dataStringify("finish", data);
@@ -28,6 +28,7 @@ export const finishGame = (gameId: number | string) => {
         player?.ws.send(response)
         player?.ws.send(winnersResponse)
       })
+      console.log(consoleMessageColor.result, `Game over. The winner is ${winnerName}`);
     }
   })
 }

@@ -1,4 +1,5 @@
-import { game, Player, Ships } from '../data/gameData';
+import { game, Player, Ships, playersID } from '../data/gameData';
+import {consoleMessageColor} from '../data/consoleview';
 import { startGame } from './startGame';
 
 export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlayer: number }, currentUser: Player) => {
@@ -9,7 +10,7 @@ export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlay
 
   game[gameId].players.push(indexPlayer);
 
-  console.log('game began', game, currentUser);
+  console.log(consoleMessageColor.result, `Player ${playersID[indexPlayer]} added ships to game ${gameId}`);
 
   startGame(gameId);
 }

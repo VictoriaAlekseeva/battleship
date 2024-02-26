@@ -1,6 +1,7 @@
 import WebSocket, { MessageEvent, WebSocketServer } from 'ws';
 import { dataParse, dataStringify } from '../helpers/parser';
 import { Player, players } from '../data/gameData'
+import {consoleMessageColor} from '../data/consoleview'
 import { createPlayer } from '../helpers/createUser';
 import { createRoom } from '../helpers/createNewRoom';
 import { updateRoom } from '../helpers/updateRoom'
@@ -15,13 +16,13 @@ export const startServer = () => {
   const wss = new WebSocketServer({ port: WEBSOCKET_PORT });
 
   wss.on('connection', (ws: WebSocket) => {
-    console.log('New client connected');
+    console.log(consoleMessageColor.playerdata, 'New player connected');
 
     let currentUser = {} as Player;
 
     ws.on('message', (message: MessageEvent) => {
       try {
-        console.log(`Received message:`, message.toString());
+        console.log(consoleMessageColor.request,`Received message: ${message.toString()}`);
         const msg = JSON.parse(message.toString())
         const { type, data } = msg;
         const parsedData = dataParse(data);
@@ -33,11 +34,9 @@ export const startServer = () => {
             currentUser = players.get(regUser.name)!;
             ws.send(dataStringify('reg', regUser));
             ws.send(updateRoom());
-            console.log(players);
             break;
           case "create_room":
             createRoom(currentUser);
-            console.log(`create_room user data ${parsedData}, type ${type}`)
             wss.clients.forEach((client) => {
               client.send(updateRoom());
             });
@@ -48,19 +47,15 @@ export const startServer = () => {
             wss.clients.forEach((client) => {
               client.send(updateRoom());
             });
-            console.log(`add_user_to_room user data ${data}`)
             break;
           case "add_ships":
             addShips(parsedData, currentUser)
-            console.log(`add_ships user data ${data}`)
             break;
           case "attack":
-            attack(parsedData)
-            console.log(`attack user data ${data}`)
+            attack(parsedData);
             break;
           case "randomAttack":
             randomAttack(parsedData);
-            console.log(`randomAttack user data ${data}`)
             break;
           case "single_play":
             console.log(`single_play user data ${data}`)
@@ -75,7 +70,11 @@ export const startServer = () => {
     });
 
     ws.on('close', () => {
-      console.log('Client disconnected');
+      console.log(`Player${currentUser.name ? ' ' +currentUser.name : ''} disconnected`);
     });
   });
+  wss.on("listening", () => {
+    console.log(consoleMessageColor.serverinfo, `WebSocket works on port ${WEBSOCKET_PORT}`);
+  });
 }
+
