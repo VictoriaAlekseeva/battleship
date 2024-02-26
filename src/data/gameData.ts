@@ -1,7 +1,5 @@
 import WebSocket from 'ws';
 
-// We should have inmemory DB with player data (login and password) storage
-
 export interface Player {
   name: string,
   password: string,
@@ -17,7 +15,6 @@ export const players: Map<string, Player> = new Map();
 
 export const playersID: Record<number, string> = {}; // list players name -> id
 
-//Player room data (players, game board, ships positions) storages in the server
 export const rooms: Room[] = [];
 
 export interface Room {
@@ -54,4 +51,6 @@ export interface Ships {
 
 export const game: Record<number | string, GameInfo> = {}; //number -> gameId, GameInfo array of 2 items with info about players
 
+
+export const winners: Record<string, number> = {}
 // game = {gameId:[{indexPlayer: number}], currentPlayer: index}}

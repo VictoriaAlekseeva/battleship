@@ -14,5 +14,4 @@ export const randomAttack = (parsedData: { gameId: number | string, indexPlayer:
   }
 
   attack(randomAttackData);
-
 }

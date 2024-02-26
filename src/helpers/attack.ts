@@ -1,4 +1,5 @@
 import { game, players, playersID } from "../data/gameData";
+import { finishGame } from "./finishGame";
 import { dataStringify } from "./parser";
 import { turn } from "./turn";
 
@@ -104,5 +105,7 @@ export const attack = (parsedData: { gameId: number | string, indexPlayer: numbe
         gamePlayer?.ws.send(turnResponse);
       })
     })
+
+    finishGame(gameId);
   }
 }

@@ -6,7 +6,7 @@ export const dataParse = (data: string) => {
   }
 }
 
-export const dataStringify = (type: string, params: object) => {
+export const dataStringify = (type: string, params: unknown) => {
   return JSON.stringify({
     type, data: JSON.stringify(params), id: 0
   })
