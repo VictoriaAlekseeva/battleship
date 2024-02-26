@@ -9,6 +9,7 @@ import { addUserToRoom } from '../helpers/addUserToRoom';
 import { addShips } from '../helpers/addShips';
 import { attack } from '../helpers/attack';
 import { randomAttack } from '../helpers/randomAttack';
+import { logOffPlayer } from '../helpers/logOffPlayer';
 
 export const startServer = () => {
 
@@ -49,7 +50,7 @@ export const startServer = () => {
             });
             break;
           case "add_ships":
-            addShips(parsedData, currentUser)
+            addShips(parsedData);
             break;
           case "attack":
             attack(parsedData);
@@ -65,12 +66,16 @@ export const startServer = () => {
         }
 
       } catch (err) {
-        console.error('!!!!MESSAGE', err)
+        console.error(consoleMessageColor.red, 'ERROR', err)
       }
     });
 
     ws.on('close', () => {
-      console.log(`Player${currentUser.name ? ' ' +currentUser.name : ''} disconnected`);
+      logOffPlayer(currentUser);
+      wss.clients.forEach((client) => {
+        client.send(updateRoom());
+      });
+      console.log(consoleMessageColor.playerdata,`Player${currentUser.name ? ' ' +currentUser.name : ''} disconnected`);
     });
   });
   wss.on("listening", () => {

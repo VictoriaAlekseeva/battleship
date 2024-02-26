@@ -3,7 +3,7 @@ import { game, players, playersID, winners } from "../data/gameData";
 import { dataStringify } from "./parser";
 
 export const finishGame = (gameId: number | string) => {
-  game[gameId].ships.forEach((playersShips, index) => {
+  game[gameId].ships.forEach((playersShips) => {
     if (playersShips.every(ship => ship.status === "killed")) {
 
       const winner= game[gameId].players[game[gameId].currentPlayer];
@@ -14,7 +14,7 @@ export const finishGame = (gameId: number | string) => {
 
       const winnersResponseData: Record<string, string | number>[] = []
 
-      const winnersData = Object.entries(winners).forEach(winner => {
+      Object.entries(winners).forEach(winner => {
         winnersResponseData.push({name: winner[0], wins: winner[1] })
       })
 

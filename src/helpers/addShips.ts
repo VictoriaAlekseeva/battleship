@@ -2,7 +2,7 @@ import { game, Player, Ships, playersID } from '../data/gameData';
 import {consoleMessageColor} from '../data/consoleview';
 import { startGame } from './startGame';
 
-export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlayer: number }, currentUser: Player) => {
+export const addShips = (parsedData: { gameId: number, ships: Ships[], indexPlayer: number }) => {
 
   const { gameId, ships, indexPlayer } = parsedData;
 
