@@ -53,6 +53,12 @@ export const attack = (parsedData: { gameId: number | string, indexPlayer: numbe
   if (!wasShot) {
     ship.shotsCoordinates.push({ x, y });
     ship.status = "shot";
+  } else {
+    const turnResponse = turn(gameId, true);
+    game[gameId].players.forEach(user => {
+      const gamePlayer = players.get(playersID[user]);
+      gamePlayer?.ws.send(turnResponse);
+    })
   }
 
   if (ship.shotsCoordinates.length === ship.length) ship.status = "killed";
