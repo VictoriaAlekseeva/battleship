@@ -2,7 +2,7 @@ import { game, players, playersID } from "../data/gameData";
 import { dataStringify } from "./parser";
 import { turn } from "./turn";
 
-export const attack = (parsedData: { gameId: number, indexPlayer: number, x: number, y: number }) => {
+export const attack = (parsedData: { gameId: number | string, indexPlayer: number | string, x: number, y: number }) => {
 
   const { gameId, indexPlayer, x, y } = parsedData;
   const playerTurn = game[gameId].players[game[gameId].currentPlayer];

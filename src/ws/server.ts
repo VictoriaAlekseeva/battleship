@@ -7,6 +7,7 @@ import { updateRoom } from '../helpers/updateRoom'
 import { addUserToRoom } from '../helpers/addUserToRoom';
 import { addShips } from '../helpers/addShips';
 import { attack } from '../helpers/attack';
+import { randomAttack } from '../helpers/randomAttack';
 
 export const startServer = () => {
 
@@ -58,6 +59,7 @@ export const startServer = () => {
             console.log(`attack user data ${data}`)
             break;
           case "randomAttack":
+            randomAttack(parsedData);
             console.log(`randomAttack user data ${data}`)
             break;
           case "single_play":

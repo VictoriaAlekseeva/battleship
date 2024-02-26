@@ -52,6 +52,6 @@ export interface Ships {
   status?: "killed"|"shot"
 }
 
-export const game: Record<number, GameInfo> = {}; //number -> gameId, GameInfo array of 2 items with info about players
+export const game: Record<number | string, GameInfo> = {}; //number -> gameId, GameInfo array of 2 items with info about players
 
 // game = {gameId:[{indexPlayer: number}], currentPlayer: index}}
