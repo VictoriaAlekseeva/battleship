@@ -1,0 +1,10 @@
+{
+  "exec": "node --no-warnings --loader ts-node/esm index.ts",
+  "events": {
+    "start": "cls || clear"
+  },
+
+  "watch": ["index.ts", "src"],
+  "ignore": ["src/**/*.spec.ts"],
+  "ext": "ts"
+}
