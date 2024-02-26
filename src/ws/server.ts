@@ -1,6 +1,6 @@
 import WebSocket, { MessageEvent, WebSocketServer } from 'ws';
 import { dataParse, dataStringify } from '../helpers/parser';
-import { Player, players, rooms } from '../data/gameData'
+import { Player, players } from '../data/gameData'
 import { createPlayer } from '../helpers/createUser';
 import { createRoom } from '../helpers/createNewRoom';
 import { updateRoom } from '../helpers/updateRoom'

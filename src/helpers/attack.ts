@@ -1,5 +1,5 @@
-import { Player, Ships, game, players, playersID } from "../data/gameData";
-import { dataParse, dataStringify } from "./parser";
+import { game, players, playersID } from "../data/gameData";
+import { dataStringify } from "./parser";
 import { turn } from "./turn";
 
 export const attack = (parsedData: { gameId: number, indexPlayer: number, x: number, y: number }) => {

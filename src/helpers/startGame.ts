@@ -1,4 +1,4 @@
-import { Player, game, players, playersID } from "../data/gameData";
+import { game, players, playersID } from "../data/gameData";
 import { dataStringify } from "./parser";
 import { turn } from "./turn";
 
