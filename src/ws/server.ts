@@ -10,6 +10,7 @@ import { addShips } from '../helpers/addShips';
 import { attack } from '../helpers/attack';
 import { randomAttack } from '../helpers/randomAttack';
 import { logOffPlayer } from '../helpers/logOffPlayer';
+import { updateWinners } from '../helpers/updateWinners';
 
 export const startServer = () => {
 
@@ -35,6 +36,9 @@ export const startServer = () => {
             currentUser = players.get(regUser.name)!;
             ws.send(dataStringify('reg', regUser));
             ws.send(updateRoom());
+            wss.clients.forEach((client) => {
+              client.send(updateWinners());
+            })
             break;
           case "create_room":
             createRoom(currentUser);
@@ -53,7 +57,7 @@ export const startServer = () => {
             addShips(parsedData);
             break;
           case "attack":
-            attack(parsedData);
+            attack(parsedData, wss);
             break;
           case "randomAttack":
             randomAttack(parsedData);
@@ -71,7 +75,7 @@ export const startServer = () => {
     });
 
     ws.on('close', () => {
-      logOffPlayer(currentUser);
+      logOffPlayer(currentUser, wss);
       wss.clients.forEach((client) => {
         client.send(updateRoom());
       });

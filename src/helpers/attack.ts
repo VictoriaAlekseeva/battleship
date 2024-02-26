@@ -3,8 +3,10 @@ import { consoleMessageColor } from '../data/consoleview';
 import { finishGame } from "./finishGame";
 import { dataStringify } from "./parser";
 import { turn } from "./turn";
+import { IncomingMessage } from "http";
+import WebSocket from "ws";
 
-export const attack = (parsedData: { gameId: number | string, indexPlayer: number | string, x: number, y: number }) => {
+export const attack = (parsedData: { gameId: number | string, indexPlayer: number | string, x: number, y: number }, wss: WebSocket.Server<typeof WebSocket, typeof IncomingMessage>) => {
 
   const { gameId, indexPlayer, x, y } = parsedData;
   const playerTurn = game[gameId].players[game[gameId].currentPlayer];
@@ -117,6 +119,6 @@ export const attack = (parsedData: { gameId: number | string, indexPlayer: numbe
 
     console.log(consoleMessageColor.result, `The ship ${attackResult.status}`)
 
-    finishGame(gameId);
+    finishGame(gameId, wss);
   }
 }

@@ -1,8 +1,11 @@
+import WebSocket from "ws";
 import { consoleMessageColor } from "../data/consoleview";
 import { game, players, playersID, winners } from "../data/gameData";
+import { updateWinners } from "./updateWinners";
 import { dataStringify } from "./parser";
+import { IncomingMessage } from "http";
 
-export const finishGame = (gameId: number | string) => {
+export const finishGame = (gameId: number | string, wss: WebSocket.Server<typeof WebSocket, typeof IncomingMessage>) => {
   game[gameId].ships.forEach((playersShips) => {
     if (playersShips.every(ship => ship.status === "killed")) {
 
@@ -12,23 +15,18 @@ export const finishGame = (gameId: number | string) => {
 
       winners[winnerName] = winners[winnerName] ? ++winners[winnerName] : 1;
 
-      const winnersResponseData: Record<string, string | number>[] = []
-
-      Object.entries(winners).forEach(winner => {
-        winnersResponseData.push({name: winner[0], wins: winner[1] })
-      })
-
-      const winnersResponse = dataStringify("update_winners", winnersResponseData)
-
       game[gameId].players.forEach((gameItem) => {
 
         const response = dataStringify("finish", data);
 
         const player = players.get(playersID[gameItem]);
         player?.ws.send(response)
-        player?.ws.send(winnersResponse)
       })
       console.log(consoleMessageColor.result, `Game over. The winner is ${winnerName}`);
     }
+
+    wss.clients.forEach((client) => {
+      client.send(updateWinners());
+    })
   })
 }

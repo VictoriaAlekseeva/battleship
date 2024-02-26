@@ -1,7 +1,10 @@
+import WebSocket from "ws";
 import { Player, game, players, playersID, rooms, winners } from "../data/gameData";
 import { dataStringify } from "./parser";
+import { updateWinners } from "./updateWinners";
+import { IncomingMessage } from "http";
 
-export const logOffPlayer = (user: Player) => {
+export const logOffPlayer = (user: Player, wss: WebSocket.Server<typeof WebSocket, typeof IncomingMessage>) => {
 
   const roomId = user.room;
   const gameId = user.gameId;
@@ -23,24 +26,20 @@ export const logOffPlayer = (user: Player) => {
 
         winners[winnerName] = winners[winnerName] ? ++winners[winnerName] : 1;
 
-        const winnersResponseData: Record<string, string | number>[] = []
-
-        Object.entries(winners).forEach(winner => {
-          winnersResponseData.push({ name: winner[0], wins: winner[1] })
-        })
-
         const response = dataStringify("finish", data);
 
         const anotherPlayer = players.get(winnerName);
         anotherPlayer!.gameId = null;
 
         anotherPlayer?.ws.send(response);
-
+        
+        wss.clients.forEach((client) => {
+          client.send(updateWinners());
+        })
       }
     })
+
     return
   }
-
-  console.log("!!!!!")
 
 }
