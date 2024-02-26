@@ -9,14 +9,13 @@ export const addUserToRoom = (currentUser: Player, roomId: number) => {
     createGame(rooms[roomIndex].roomUsers);
     rooms.splice(roomIndex, 1);
 
-    const playerRoomIndex = rooms.findIndex(room => room.roomId === currentUser.room);
-    rooms.splice(playerRoomIndex, 1);
-    // currentUser.room = null;
-
     rooms[roomIndex].roomUsers.forEach(user => {
       const player = players.get(user.name) as Player;
       player.room = null
     })
+
+    const playerRoomIndex = rooms.findIndex(room => room.roomId === currentUser.room);
+    rooms.splice(playerRoomIndex, 1);
 
   }
   console.log(rooms)
